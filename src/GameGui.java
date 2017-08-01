@@ -7,7 +7,7 @@ import java.util.Objects;
 
 class GameGui {
 
-    GameGui(Integer[][] gameArr) {
+    GameGui(MyPoint[][] gameArr) {
         showGUI(gameArr);
     }
 
@@ -15,11 +15,11 @@ class GameGui {
     private JLabel firstPoint;
     private JLabel secondPoint;
 
-    private JLabel[][] createLabels(Integer[][] gameArr) {
+    private JLabel[][] createLabels(MyPoint[][] gameArr) {
         JLabel[][] labels = new JLabel[4][4];
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                labels[i][j] = new JLabel("" + gameArr[i][j]) {
+                labels[i][j] = new JLabel("" + gameArr[i][j].getX()) {
                     public void paintComponent(Graphics g) {
                         //draw background
                         Color old = g.getColor();
@@ -29,13 +29,15 @@ class GameGui {
                         super.paintComponent(g);
                     }
                 };
+                final String k=""+i+":"+j;
                 labels[i][j].setForeground(Color.BLACK);
                 labels[i][j].setBorder(new BevelBorder(BevelBorder.RAISED, Color.GRAY, Color.gray));
                 labels[i][j].setFont(new Font("Times New Roman", Font.PLAIN, 48));
                 labels[i][j].setBackground(Color.black);
-                labels[i][j].addMouseListener(new MouseAdapter() {
+                MouseAdapter mouseListener = new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
+                        System.out.println(k);
                         super.mouseClicked(e);
                         JLabel labelOnClick;
                         labelOnClick = (JLabel) e.getComponent();
@@ -65,13 +67,14 @@ class GameGui {
                             firstPoint = labelOnClick;
                         }
                     }
-                });
+                };
+                labels[i][j].addMouseListener(mouseListener);
             }
         }
         return labels;
     }
 
-    private void showGUI(Integer[][] gameArr) {
+    private void showGUI(MyPoint[][] gameArr) {
         JFrame frame = new JFrame("Hello");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         //Display the window.
