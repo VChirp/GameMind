@@ -1,25 +1,25 @@
+package main;
+
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Objects;
 
 class GameGui {
 
-    GameGui(MyPoint[][] gameArr) {
-        showGUI(gameArr);
+    private GameLogic logic = new GameLogic();
+    private MyPoint[][] status = logic.getStatus();
+
+    GameGui() {
+        showGUI();
     }
 
-    private int clickCount = 0;
-    private JLabel firstPoint;
-    private JLabel secondPoint;
-
-    private JLabel[][] createLabels(MyPoint[][] gameArr) {
+    private JLabel[][] createLabels(MyPoint[][] status) {
         JLabel[][] labels = new JLabel[4][4];
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                labels[i][j] = new JLabel("" + gameArr[i][j].getX()) {
+                labels[i][j] = new JLabel("" + status[i][j].getValue()) {
                     public void paintComponent(Graphics g) {
                         //draw background
                         Color old = g.getColor();
@@ -29,7 +29,8 @@ class GameGui {
                         super.paintComponent(g);
                     }
                 };
-                final String k=""+i+":"+j;
+                final Point labelPoint = new Point();
+                labelPoint.setLocation(i, j);
                 labels[i][j].setForeground(Color.BLACK);
                 labels[i][j].setBorder(new BevelBorder(BevelBorder.RAISED, Color.GRAY, Color.gray));
                 labels[i][j].setFont(new Font("Times New Roman", Font.PLAIN, 48));
@@ -37,35 +38,28 @@ class GameGui {
                 MouseAdapter mouseListener = new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        System.out.println(k);
-                        super.mouseClicked(e);
+                        System.out.println(labelPoint);
+                        logic.userClick(labelPoint.x, labelPoint.y);
                         JLabel labelOnClick;
                         labelOnClick = (JLabel) e.getComponent();
                         labelOnClick.setBackground(Color.green);
-                        System.out.println(labelOnClick.getText());
-                        clickCount++;
-                        System.out.println("Cli: " + clickCount);
-
-                        if (clickCount == 2) {
-                            secondPoint = labelOnClick;
-                            if (Objects.equals(firstPoint.getText(), secondPoint.getText())) {
-                                clickCount = 0;
-                                System.out.println("yey");
-                            } else {
-                                SwingUtilities.invokeLater(() -> {
-                                    try {
-                                        firstPoint.setBackground(Color.black);
-                                        secondPoint.setBackground(Color.black);
-                                        Thread.sleep(1000);
-                                    } catch (InterruptedException e1) {
-                                        e1.printStackTrace();
+                        SwingUtilities.invokeLater(() -> {
+                            try {
+                                for (int i = 0; i < 4; i++) {
+                                    for (int j = 0; j < 4; j++) {
+                                        if (status[i][j].isWasSelected()) {
+                                            labels[i][j].setBackground(Color.green);
+                                        } else {
+                                            labels[i][j].setBackground(Color.black);
+                                        }
                                     }
-                                });
-                                clickCount = 0;
+                                }
+                                Thread.sleep(500);
+                            } catch (InterruptedException e1) {
+                                e1.printStackTrace();
                             }
-                        } else if (clickCount == 1) {
-                            firstPoint = labelOnClick;
-                        }
+                        });
+                        super.mouseClicked(e);
                     }
                 };
                 labels[i][j].addMouseListener(mouseListener);
@@ -74,11 +68,11 @@ class GameGui {
         return labels;
     }
 
-    private void showGUI(MyPoint[][] gameArr) {
+    private void showGUI() {
         JFrame frame = new JFrame("Hello");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         //Display the window.
-        JLabel[][] labels = createLabels(gameArr);
+        JLabel[][] labels = createLabels(status);
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 JLabel label = labels[i][j];
@@ -90,5 +84,4 @@ class GameGui {
         frame.pack();
         frame.setVisible(true);
     }
-
 }
