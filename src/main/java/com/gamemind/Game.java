@@ -1,4 +1,4 @@
-package main;
+package com.gamemind;
 
 public class Game {
 
