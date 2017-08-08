@@ -12,9 +12,9 @@ class GameGui {
     private static final int ROWS = 4;
     private GameLogic logic;
 
-    GameGui() {
-        logic = new GameLogic();
-        MyPoint[][] initialStatus = logic.getStatus();
+    GameGui(GameLogic logic) {
+        this.logic = logic;
+        MyPoint[][] initialStatus = this.logic.getStatus();
         showGUI(initialStatus);
     }
 
