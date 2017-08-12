@@ -6,6 +6,10 @@ class GameLogic {
     private MyPoint[][] status;
     private int clickCounter = 0;
 
+    enum State {
+        NOCLICK, FIRSTCLICK, SEKONDCLICK
+    }
+
     GameLogic(ArrayGenerator arrayGenerator) {
         int[][] internalNumbers = arrayGenerator.generate();
         MyPoint[][] status = new MyPoint[internalNumbers.length][];
@@ -31,31 +35,50 @@ class GameLogic {
         }
         return statusCopy;
     }
-    MyPoint firstPoint;
+
+    private State stateChanger(int clickCounter) {
+        State state = State.NOCLICK;
+        switch (clickCounter) {
+            case 1:
+                state = State.FIRSTCLICK;
+                break;
+            case 2:
+                state = State.SEKONDCLICK;
+                break;
+        }
+        return state;
+    }
+
+    private MyPoint firstPoint;
+
     MyPoint[][] userClick(int x, int y) {
         System.out.printf("Received coordinates %d:%d%n", x, y);
+
         if (x >= 0 && y >= 0) {
             if (!status[x][y].isWasSelected()) {
                 clickCounter++;
-                //TODO change clickCounter to ENUM
-                if (clickCounter == 1) {
-                    firstPoint = status[x][y];
-                    firstPoint.setWasSelected(true);
-                } else if (clickCounter == 2) {
-                    MyPoint secondPoint = status[x][y];
-                    secondPoint.setWasSelected(true);
-                    if (firstPoint.getValue() == secondPoint.getValue()) {
-                        clickCounter = 0;
-                        System.out.println("yey");
-                    } else {
-                        clickCounter = 0;
-                        firstPoint.setWasSelected(false);
-                        secondPoint.setWasSelected(false);
-                    }
+                State state = stateChanger(clickCounter);
+                switch (state) {
+                    case FIRSTCLICK:
+                        firstPoint = status[x][y];
+                        firstPoint.setWasSelected(true);
+                        break;
+                    case SEKONDCLICK:
+                        MyPoint secondPoint = status[x][y];
+                        secondPoint.setWasSelected(true);
+                        if (firstPoint.getValue() == secondPoint.getValue()) {
+                            clickCounter = 0;
+                            System.out.println("yey");
+                        } else {
+                            clickCounter = 0;
+                            firstPoint.setWasSelected(false);
+                            secondPoint.setWasSelected(false);
+                        }
+                        break;
+                    default:
+                        System.err.println("Received weird coordinates");
                 }
             }
-        } else {
-            System.err.println("Received weird coordinates");
         }
         return getStatus();
     }
