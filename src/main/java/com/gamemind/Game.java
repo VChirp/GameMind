@@ -1,12 +1,11 @@
 package com.gamemind;
 
+import lombok.Data;
+
+@Data
 public class Game {
-    //    TODO Make array changeable size
-    private static final int ROWandCOLUMNS = 6;
 
     public static void main(String[] Args) {
-        ArrayGenerator arrayGenerator = new ArrayGenerator(ROWandCOLUMNS);
-        GameLogic logic = new GameLogic(arrayGenerator);
-        new GameGui(logic, ROWandCOLUMNS);
+        new InitialFormGUI();
     }
 }

@@ -7,7 +7,7 @@ class GameLogic {
     private int clickCounter = 0;
 
     enum State {
-        NOCLICK, FIRSTCLICK, SEKONDCLICK
+        NOCLICK, FIRSTCLICK, SECONDCLICK
     }
 
     GameLogic(ArrayGenerator arrayGenerator) {
@@ -43,7 +43,7 @@ class GameLogic {
                 state = State.FIRSTCLICK;
                 break;
             case 2:
-                state = State.SEKONDCLICK;
+                state = State.SECONDCLICK;
                 break;
         }
         return state;
@@ -63,7 +63,7 @@ class GameLogic {
                         firstPoint = status[x][y];
                         firstPoint.setWasSelected(true);
                         break;
-                    case SEKONDCLICK:
+                    case SECONDCLICK:
                         MyPoint secondPoint = status[x][y];
                         secondPoint.setWasSelected(true);
                         if (firstPoint.getValue() == secondPoint.getValue()) {

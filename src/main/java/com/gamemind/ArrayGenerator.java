@@ -6,11 +6,13 @@ import java.util.Random;
 class ArrayGenerator {
 
     private final int rows;
+    private final int columns;
     private final int pairs;
 
-    ArrayGenerator(int rows) {
+    ArrayGenerator(int rows, int columns) {
         this.rows = rows;
-        this.pairs = rows * rows / 2;
+        this.columns = columns;
+        this.pairs = rows * columns / 2;
     }
 
     int[][] generate() {
@@ -20,7 +22,7 @@ class ArrayGenerator {
     }
 
     private int[][] initializeArray(Integer[] num) {
-        int[][] gameArr = new int[rows][rows];
+        int[][] gameArr = new int[rows][columns];
         gameArr = inArr(num, gameArr);
         return gameArr;
     }
@@ -53,7 +55,7 @@ class ArrayGenerator {
             for (int repeat = 0; repeat < 2; repeat++) {
                 Random rand = new Random();
                 xPosition = rand.nextInt(rows);
-                yPosition = rand.nextInt(rows);
+                yPosition = rand.nextInt(columns);
                 if (gameArr[xPosition][yPosition] == 0) {
                     gameArr[xPosition][yPosition] = i;
                     count++;
