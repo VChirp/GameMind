@@ -7,16 +7,16 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 class GameGui {
-    //TODO replace with initial state
-    private int ROWS;
-    private int COLUMNS;
+
+    private int rows;
+    private int columns;
     private GameLogic logic;
 
     GameGui(GameLogic logic, int ROWS, int COLUMNS) {
         this.logic = logic;
         MyPoint[][] initialStatus = this.logic.getStatus();
-        this.ROWS = ROWS;
-        this.COLUMNS = COLUMNS;
+        this.rows = ROWS;
+        this.columns = COLUMNS;
         showGUI(initialStatus);
     }
 
@@ -24,22 +24,22 @@ class GameGui {
         JFrame frame = new JFrame("Kill all numbers");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         JLabel[][] labels = createLabels(status);
-        for (int i = 0; i < ROWS; i++) {
-            for (int j = 0; j < COLUMNS; j++) {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
                 JLabel label = labels[i][j];
                 frame.add(label);
             }
         }
 
-        frame.setLayout(new GridLayout(ROWS, COLUMNS));
+        frame.setLayout(new GridLayout(rows, columns));
         frame.pack();
         frame.setVisible(true);
     }
 
     private JLabel[][] createLabels(MyPoint[][] initialStatus) {
-        JLabel[][] labels = new JLabel[ROWS][COLUMNS];
-        for (int i = 0; i < ROWS; i++) {
-            for (int j = 0; j < COLUMNS; j++) {
+        JLabel[][] labels = new JLabel[rows][columns];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
                 final Point labelPoint = new Point();
                 labelPoint.setLocation(i, j);
 
@@ -60,6 +60,7 @@ class GameGui {
         JLabelPainter(String text) {
             super(text);
         }
+
         @Override
         public void paintComponent(Graphics g) {
             //draw background
@@ -88,17 +89,12 @@ class GameGui {
             labelOnClick.setBackground(Color.green);
             SwingUtilities.invokeLater(() -> {
                 try {
-                    for (int i = 0; i < ROWS; i++) {
-                        for (int j = 0; j < COLUMNS; j++) {
+                    for (int i = 0; i < rows; i++) {
+                        for (int j = 0; j < columns; j++) {
                             if (status[i][j].isWasSelected()) {
-                                //TODO make checked on click cells - green, and correctly guessed - white
                                 labels[i][j].setBackground(Color.white);
-                                //TODO hide number after guessing
-//                                labels[i][j].setForeground(Color.white);
                             } else {
                                 labels[i][j].setBackground(Color.black);
-//                                labels[i][j].setForeground(Color.black);
-
                             }
                         }
                     }

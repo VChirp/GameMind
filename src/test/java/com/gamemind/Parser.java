@@ -5,7 +5,8 @@ import java.util.Arrays;
 import java.util.Objects;
 
 class Parser {
-    MyPoint[][] parse(String str) {
+
+    static MyPoint[][] parse(String str) {
         String[] rows = str.split("\n");
         int columnsNumber = rows[0].split("[|]").length;
         System.out.println(Arrays.toString(rows));
@@ -32,6 +33,4 @@ class Parser {
         }
         return status;
     }
-
-
 }

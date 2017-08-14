@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 class GameLogic {
     private MyPoint[][] status;
-    private int clickCounter = 0;
+    private State state = State.NOCLICK;
 
     enum State {
         NOCLICK, FIRSTCLICK, SECONDCLICK
@@ -36,13 +36,12 @@ class GameLogic {
         return statusCopy;
     }
 
-    private State stateChanger(int clickCounter) {
-        State state = State.NOCLICK;
-        switch (clickCounter) {
-            case 1:
+    private State transition(State state) {
+        switch (state) {
+            case NOCLICK:
                 state = State.FIRSTCLICK;
                 break;
-            case 2:
+            case FIRSTCLICK:
                 state = State.SECONDCLICK;
                 break;
         }
@@ -56,8 +55,7 @@ class GameLogic {
 
         if (x >= 0 && y >= 0) {
             if (!status[x][y].isWasSelected()) {
-                clickCounter++;
-                State state = stateChanger(clickCounter);
+                state = transition(state);
                 switch (state) {
                     case FIRSTCLICK:
                         firstPoint = status[x][y];
@@ -67,10 +65,10 @@ class GameLogic {
                         MyPoint secondPoint = status[x][y];
                         secondPoint.setWasSelected(true);
                         if (firstPoint.getValue() == secondPoint.getValue()) {
-                            clickCounter = 0;
+                            state = State.NOCLICK;
                             System.out.println("yey");
                         } else {
-                            clickCounter = 0;
+                            state = State.NOCLICK;
                             firstPoint.setWasSelected(false);
                             secondPoint.setWasSelected(false);
                         }
